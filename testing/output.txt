@@ -1,0 +1,39 @@
+h basic tasks to reach the objective of getting 1000 followers on Twitter. Here's a list of new tasks:
+
+```json
+[
+    {
+        "id": 1,
+        "task": "Get trending topics",
+        "description": "Use get_trending_topics function to get trending topics",
+        "status": "incomplete",
+        "priority": 1,
+        "function": "get_trending_topics",
+        "params": {
+            "count": 5
+        }
+    },
+    {
+        "id": 2,
+        "task": "Create engagement tweet",
+        "description": "Use create_tweet function to craft a high-engagement tweet",
+        "status": "incomplete",
+        "priority": 2,
+        "function": "create_tweet",
+        "params": {
+            "tweet_text": "Hello, let's get this conversation started! #introduction"
+        }
+    },
+    {
+        "id": 3,
+        "task": "Follow users",
+        "description": "Use follow_user function to follow 5 users",
+        "status": "incomplete",
+        "priority": 3,
+        "function": "follow_user",
+        "params": {
+            "user_id": "1234567890"
+        }
+    }
+]
+```

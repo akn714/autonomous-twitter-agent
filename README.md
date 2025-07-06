@@ -1,6 +1,6 @@
 ## Autonomous Twitter Agent
 - An autonomous agent that interacts autonomously with Twitter.
-- (resources)[https://www.perplexity.ai/search/explain-the-working-of-autonom-Dlf8v61NRwSg4IINbpNs.Q?0=r]
+- [resources](https://www.perplexity.ai/search/explain-the-working-of-autonom-Dlf8v61NRwSg4IINbpNs.Q?0=r)
 
 ### Todo
 - [ ] Check for notifications to fetch mentions every 10 minutes in background
@@ -20,7 +20,7 @@
     - comment on the tweets
     - follow and unfollow the users
 
-### Workflow of Autonomous Agents ([resource](https://resources.parcha.com/deep-dive-part-2-how-does-babyagi/))
+### Workflow of Autonomous Agents ([source](https://resources.parcha.com/deep-dive-part-2-how-does-babyagi/))
 1. Give an Objective to the Agent with an initial task
 2. Agent will store the initial task in the queue and pass the queue to the Execution Agent
 3. Execution Agent will execute the task and store the result in the database for future reference

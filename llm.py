@@ -24,27 +24,4 @@ class GroqLLM:
 
         return output
 
-SYSTEM_PROMPT = """ """.strip()
-
-USER_PROMPT = """
-{data}
-""".strip()
-
-def generate_response(tweets_data):
-    print('[+] Generating updates')
-    llm = GroqLLM()
-
-    messages = [
-        {
-            'role': 'system',
-            'content': SYSTEM_PROMPT
-        },
-        {
-            'role': 'user',
-            'content': USER_PROMPT.format(data=data)
-        }
-    ]
-    response = llm.get_llm_response(messages)
-    response = response.strip().strip('```json').strip()
-    print(response)
-    return json.loads(response)
+llm = GroqLLM()
