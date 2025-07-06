@@ -39,14 +39,20 @@ async def get_trends():
     return trends
 
 async def search_tweets():
-    tweets = await client.search_tweet('python', 'Latest')
+    tweets = await client.search_tweet('latest research on AGI', 'Latest')
 
+    all_tweets_data = {}
     for tweet in tweets:
-        print(
-            tweet.user.name,
-            tweet.text,
-            tweet.created_at
-        )
+        print(f"[+] fetched tweet of {tweet.user.name}")
+        all_tweets_data[tweet.user.name] = tweet.text
+        # print(f"{tweet.user.name}: {tweet.text}")
+    print(all_tweets_data)
+    # for tweet in tweets:
+    #     print(
+    #         tweet.user.name,
+    #         tweet.text,
+    #         tweet.created_at
+    #     )
     
     # print("\nTop Tweets for Trending Topic:")
     # for tweet in search:

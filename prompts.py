@@ -19,18 +19,18 @@ Example call:
 }}
 ```
 
-2. search_tweets_by_topic(topic: str)
+2. search_tweets_by_query(query: str)
 
-Searches tweets by topic using the provided topic.
+Searches tweets using the provided query.
 Available parameters:
 - topic (str): The topic to search for (required).
 
 Example call:
 ```json
 {{
-    "function": "search_tweets_by_topic",
+    "function": "search_tweets_by_query",
     "params": {{
-        "topic": "Topic name"
+        "query": "Query text"
     }}
 }}
 ```
