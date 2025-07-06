@@ -19,6 +19,11 @@
     - retweet the tweets
     - comment on the tweets
     - follow and unfollow the users
+- Workflow:
+    - Gets a task from the queue
+    - Generate a list of functions to be performed to accomplish the task using llm call
+    - Calls the functions in the list one by one
+    - Stores the results in the last_task_result array
 
 ### Workflow of Autonomous Agents ([source](https://resources.parcha.com/deep-dive-part-2-how-does-babyagi/))
 1. Give an Objective to the Agent with an initial task

@@ -167,37 +167,30 @@ Example call:
 """
 
 TASK_CREATION_SYSTEM_PROMPT = """
-You are a task creation agent a subagent of the Autonomous Twitter Agent that uses list of results of completed tasks and current incomplete task queue to generate new tasks that that lead the AI system to achieve below objective.
+You are a task creation agent a subagent of the Autonomous Twitter Agent that uses list of results of previous completed tasks and current incomplete task queue to generate a new task that that lead the AI system to achieve below objective.
 The tasks should be created in accordance with the available functions.
 
 Main Agent Objective: {objective}
 
 Available Functions: {available_functions}
 
-The response should only contains a JSON array of task objects with the following format:
+The new task should be according to the available functions so that the AI system can accomplish the task easily.
+
+The response should only contains a JSON of task object with the following format:
 Example Response:
 ```json
-[
-    {{
-        "id": 1,
-        "task": "Scrape trending tweets",
-        "description": "Use get_trending_topics function to scrape trending tweets"
-    }},
-    {{
-        "id": 2,
-        "task": "Generate engagement tweet",
-        "description": "Use the language model to craft a high-engagement tweet using the collected trends"
-    }}
-]
+{{
+    "task": "Reply to 5 trending tweets"
+}}
 ```
+In the above example, the AI system could achieve the task as we have function for searching trending tweets (search_tweets_by_query) and reply to them (comment_on_tweet).
 """
 
 TASK_CREATION_USER_PROMPT = """
 last completed task results: {last_task_result}
 current task queue: {task_queue}
 
-Based on the result, create new tasks to be completed by the AI system that do not overlap with incomplete tasks.
-Return the new tasks in an array.
+Based on the result, create a new task to be completed by the AI system that do not overlap with incomplete tasks.
 """
 
 TASK_PRIORITIZATION_SYSTEM_PROMPT = """
@@ -211,14 +204,12 @@ Example Response:
 ```json
 [
   {{
-    // task 1
-    "1": "",
-    "description": ""
+    // task with priority 1
+    "1": "task description"
   }},
   {{
-    // task 2
-    "2": "",
-    "description": ""
+    // task with priority 2
+    "2": "task description"
   }}
 ]
 ```
@@ -233,20 +224,31 @@ Return the prioritized tasks in an array.
 """
 
 TASK_EXECUTION_SYSTEM_PROMPT = """
-You are a task execution agent a subagent  of the Autonomous Twitter Agent that completes tasks by using the following functions:
+You are a task execution agent a subagent of the Autonomous Twitter Agent that completes tasks by using the following functions:
 
 ---
 
 Available Tools:
+{available_tools}
 
-1. get_tweets_data: fetches tweets data from twitter
-2. generate_response: uses llm to generate a response based on the input
+---
 
-Example Response:
+You are given a task and a list of tools that you can use to complete the task. You must use the tools in the correct order.
+Return a JSON object which contains a set of functions that will be used to complete the task.
+
+Example Response (JSON):
 ```json
 {{
-  "new task 1": "",
-  "description": ""
+  "functions": [
+    {{
+      "name": "function_name",
+      "description": "function_description",
+      "parameters": {{
+        "param1": "value1",
+        "param2": "value2"
+      }}
+    }}
+  ]
 }}
 """
 

@@ -3,9 +3,9 @@
 from twikit import Client
 # from twikit.errors import TwiException
 
-from llm import llm
-from prompts import TASK_EXECUTION_SYSTEM_PROMPT, TASK_EXECUTION_USER_PROMPT
-from  parser import Parser
+from utils.llm import llm
+from utils.prompts import TASK_EXECUTION_SYSTEM_PROMPT, TASK_EXECUTION_USER_PROMPT
+from utils.parser import Parser
 
 class TaskExecutionAgent:
     def __init__(self):

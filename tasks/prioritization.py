@@ -4,9 +4,9 @@ import os
 import json
 from dotenv import load_dotenv
 
-from llm import llm
-from prompts import TASK_PRIORITIZATION_SYSTEM_PROMPT, TASK_PRIORITIZATION_USER_PROMPT
-from parser import Parser
+from utils.llm import llm
+from utils.prompts import TASK_PRIORITIZATION_SYSTEM_PROMPT, TASK_PRIORITIZATION_USER_PROMPT
+from utils.parser import Parser
 
 load_dotenv()
 
