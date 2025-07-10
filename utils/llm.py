@@ -8,13 +8,14 @@ from utils.chutes_llm import ChutesLLM, ChutesLLMError
 load_dotenv()
 
 class GroqLLM:
-    model = "llama-3.3-70b-versatile"
+    # model = "llama-3.3-70b-versatile"
+    model = "gemma2-9b-it"
 
     def __init__(self):
         self.client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
     def get_llm_response(self, messages):
-        print('[+] Groq LLM responding')
+        # print('[groq] Groq LLM responding')
         response = self.client.chat.completions.create(
             model=self.model,
             messages=messages,
@@ -34,7 +35,7 @@ class ChutesAI:
     model = "deepseek-ai/DeepSeek-V3-0324"
 
     def __init__(self):
-        self.client = ChutesLLM(api_key=os.getenv("CHUTES_API_KEY"))
+        self.client = ChutesLLM(api_key=os.getenv("CHUTES_AI_API_KEY"))
 
     def get_llm_response(self, messages):
         response = self.client.chat.completions.create(
@@ -80,8 +81,8 @@ class ChutesAI:
 
 
 # llm
-llm = ChutesAI()
-# llm = GroqLLM()
+# llm = ChutesAI()
+llm = GroqLLM()
 
 def get_llm_response(messages):
     try:

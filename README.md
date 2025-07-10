@@ -2,16 +2,17 @@
 - An autonomous agent that interacts autonomously with Twitter.
 - [resources](https://www.perplexity.ai/search/explain-the-working-of-autonom-Dlf8v61NRwSg4IINbpNs.Q?0=r)
 
-### Todo
-- [ ] Check for notifications to fetch mentions every 10 minutes in background
-- [ ] Tweets based on trending topics of twitter
-
 ### Agents Involved
-1. Task Creation Agent - Makes llm request with objective and returns the task, 
+1. Task Creation Agent - Makes llm request with objective and returns the task
 2. Task Prioritization Agent - Makes llm request with tasks queue and objective, and returns the prioritized tasks
 3. Task Execution Agent - Uses llm and functions to perform a perticular task
 
 **Task Execution Agent**<br>
+- Workflow:
+    - Gets a task from the queue
+    - Generate a list of functions to be performed to accomplish the task using llm call
+    - Calls the functions in the list one by one
+    - Stores the results in the last_task_result array
 - Use the twitter api to:
     - get the tweets of the users
     - post the tweets
@@ -19,11 +20,6 @@
     - retweet the tweets
     - comment on the tweets
     - follow and unfollow the users
-- Workflow:
-    - Gets a task from the queue
-    - Generate a list of functions to be performed to accomplish the task using llm call
-    - Calls the functions in the list one by one
-    - Stores the results in the last_task_result array
 
 ### Workflow of Autonomous Agents ([source](https://resources.parcha.com/deep-dive-part-2-how-does-babyagi/))
 1. Give an Objective to the Agent with an initial task

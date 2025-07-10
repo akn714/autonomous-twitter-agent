@@ -20,7 +20,7 @@ class TaskCreationAgent:
         self.llm = llm
 
     def create_tasks(self, objective, tasks_queue, last_task_result):
-        print('[+] Creating new tasks')
+        print('[crete_tasks] Creating new tasks')
 
         messages = [
             {

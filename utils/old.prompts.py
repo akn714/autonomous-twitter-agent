@@ -1,9 +1,9 @@
 AVAILABLE_FUNCTIONS = """
 Available Functions
 
-1. get_user_tweets(handle, count: str = 5)
+1. get_tweets_data(handle, count: str = 5)
 
-Fetch tweets of a user
+Fetches tweets data from twitter
 Available parameters:
 - handle (str): Twitter handle of the user (required).
 - count (str): Number of tweets to fetch (optional; default: 5).
@@ -11,7 +11,7 @@ Available parameters:
 Example call:
 ```json
 {{
-    "function": "get_user_tweets",
+    "function": "get_tweets_data",
     "params": {{
         "handle": "twitter_handle",
         "count": 5
@@ -151,7 +151,7 @@ Example call:
 
 10. get_user_followers(user_id: str)
 
-Returns the list of followers of a user using the provided user ID of twitter.
+Returns the followers of a user using the provided user ID on twitter.
 Available parameters:
 - user_id (str): The ID of the user to get followers for (required).
 
@@ -182,31 +182,25 @@ Example call:
 """
 
 TASK_CREATION_SYSTEM_PROMPT = """
-You are the Task Creation Agent for an autonomous Twitter agent system. Your job is to take a high-level objective and break it down into a list of concrete tasks that would help accomplish the objective using the available functions.
+You are a task creation agent a subagent of the Autonomous Twitter Agent that uses list of results of previous completed tasks (if provided), current incomplete task queue and an objective to generate a new task that that lead the AI system to achieve below objective. 
 
-Your output should be JSON containing an actionable and clear task. The task should represent a meaningful step toward achieving the objective.
+The tasks should be created in accordance with the available functions.
 
-Guidelines:
-- Use the available functions list to inspire task types.
-- Task should be executable and aligned with the agent's capabilities.
-- Task should be specific (e.g., “search tweets about AI and follow people who post those tweets” rather than “do something with AI”).
-- Do not include implementation or code; only describe the task in plain language.
-- Avoid repetition unless a task is to be repeated with a different parameter.
+Main Agent Objective: {objective}
 
-Output format: 
-Return only a JSON object as given in the example below:
+Available Functions: {available_functions}
 
-Example:
+The new task should be according to the available functions so that the AI system can accomplish the task easily.
+
+The response should only contains a JSON of task object with the following format:
+Example Response:
 ```json
 {{
-    "task": "Like 5 tweets related to AGI.",
-    "description": "Use search_tweets_by_query() to search tweets related to AGI and then use like_tweets() function to like tweets retrieved by search_tweets_by_query() function."
+    "task": "Reply to 5 trending tweets"
+    "description": "Use the get_trending_topics function to get trending topics/tweets and then use the comment_on_tweet function to reply to them."
 }}
 ```
-The above new task is feasible with available function as it can be executed as:
-step 1: tweets = search_tweets_by_query("AGI")
-step 2: like_tweets(tweets)
-and done.
+In the above example, the AI system could achieve the task as we have function for searching trending tweets (search_tweets_by_query) and reply to them (comment_on_tweet).
 """
 
 TASK_CREATION_USER_PROMPT = """
@@ -256,83 +250,27 @@ Available functions:
 
 ---
 
-You run in a ReAct loop. In the ReAct loop, you will perform the following steps:
-1. You will be given a task to perform.
-2.0. You will generate a list of functions from available functions to complete the task and response with a json with only function names without any parameters (eg. {{ "functions": ["get_trending_topics", "search_tweet_by_query", "like_tweet"] }}).
-2.1. If a task is not feasible with available functions, respond with a error json (exactly this): {{ "error":"NO_AVILABLE_FUNCTION_TO_COMPLETE_TASK" }}.
-3. You will not receive all the parameters for all the functions in the beginning. Instead, you will receive the parameters for the functions in the conversation history. You will use the conversation history to generate the parameters for the functions.
-4. After generating the list of functions, user will repond with "START_EXECUTION" command after which you will respond with one function at a time with all parameters (get these from conversation history if not given already).
-5. The function will be executed and then the results will be given to you, then you will respond with the next function and the loop goes on until all the functions are executed.
-6. If you don't get any parameter for a function, you will respond with a error json (exactly this): {{ "error":"NO_PARAMETERS_FOR_FUNCTION" }}.
-7. If all the functions execute successfully, you will respond with a json {{ "success":"TASK_EXECUTION_SUCCESS" }}.
-8. In between the ReAct loop, if you are not able to respond with required reponses or anything suspicious happens, you will respond with a error json (exactly this): {{ "error":"NO_RESPONSE" }}.
+You are given a task and a list of functions that you can use to complete the task. You must use the functions in the correct order.
+Return a JSON object which contains a set of functions that will be used to complete the provided task.
 
----
-
-Example conversation:
-
-user -> task: Reply to tweets posted about AI in last 24 hours
-you (agnet) ->
+Example Response (JSON):
 ```json
 {{
-    "functions": ["search_tweets_by_query", "comment_on_tweets"]
-}}```
-user -> START_EXECUTION
-you (agnet) ->
-```json
-{{
-    "function": "search_tweets_by_query",
-    "params": {{
-        "query": "AI filter:safe lang:en -is:retweet -is:reply -is:quote -has:links -has:videos -has:images posted:2023-03-15..2023-03-16"
-    }}
-}}
-```
-user -> ```json
-{{
-    "tweets": [
-        {{
-            "id": "1234567890",
-            "text": "Tweet text"
-        }},
-        {{
-            "id": "1234567891",
-            "text": "Tweet text"
+    "function1_name": {{
+        "description": "function_description",
+        "parameters": {{
+            "param1": "value1", // leave the value empty if you don't get any
+            "param2": "value2" // leave the value empty if you don't get any
         }}
-    ]
-}}
-```
-you (agnet) -> ```json
-{{
-    "function": "generate_tweet_content", // todo: change this function to generate_replies
-    "params": {{
-        "topic": "AI" // set this to tweets[i].text
+    }},
+    "function2_name": {{
+        "description": "function_description",
+        "parameters": {{
+            "param1": "value1", // leave the value empty if you don't get any
+            "param2": "value2" // leave the value empty if you don't get any
+        }}
     }}
 }}
-```
-user -> ```json
-{{
-    "tweet_content1": "Tweet content 1",
-    "tweet_content2": "Tweet content 2"
-}}
-you (agnet) -> ```json
-{{
-    "function": "comment_on_tweets",
-    "params": {{
-        "tweets": [
-            {{
-                "id": "1234567890",
-                "text": "Tweet text"
-            }},
-            {{
-                "id": "1234567891",
-                "text": "Tweet text"
-            }}
-        ]
-    }}
-}}
-```
-
-This example conversation should be strictly followed.
 """
 
 TASK_EXECUTION_USER_PROMPT = """
