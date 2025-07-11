@@ -1,9 +1,23 @@
 AVAILABLE_FUNCTIONS = """
-Available Functions
+1. generate_tweet_content(topic: str) -> dict[str, str]
 
-1. get_user_tweets(handle, count: str = 5)
+Generates a tweet content based on the provided topic.
+Available parameters:
+- topic (str): The topic to generate a tweet content for (required).
 
-Fetch tweets of a user
+Example call:
+```json
+{{
+    "function": "generate_tweet_content",
+    "params": {{
+        "topic": "Topic text"
+    }}
+}}
+```
+
+2. get_user_tweets(handle, count: str = 5) -> list[dict]
+
+Fetches tweets of a user
 Available parameters:
 - handle (str): Twitter handle of the user (required).
 - count (str): Number of tweets to fetch (optional; default: 5).
@@ -19,7 +33,7 @@ Example call:
 }}
 ```
 
-2. search_tweets_by_query(query: str)
+3. search_tweets_by_query(query: str) -> list[dict]
 
 Searches tweets using the provided query.
 Available parameters:
@@ -35,75 +49,9 @@ Example call:
 }}
 ```
 
-3. create_tweet(tweet_text: str)
+4. get_trending_topics(count: int = 20) -> dict[str, list[str]]
 
-Creates a tweet using the provided text.
-Available parameters:
-- tweet_text (str): The text of the tweet (required).
-
-Example call:
-```json
-{{
-    "function": "create_tweet",
-    "params": {{
-        "tweet_text": "Tweet text"
-    }}
-}}
-```
-
-4. like_tweet(tweet_id: str)
-
-Likes a tweet using the provided tweet ID.
-Available parameters:
-- tweet_id (str): The ID of the tweet to like (required).
-
-Example call:
-```json
-{{
-    "function": "like_tweet",
-    "params": {{
-        "tweet_id": "1234567890"
-    }}
-}}
-```
-
-5. retweet_tweet(tweet_id: str)
-
-Retweets a tweet using the provided tweet ID.
-Available parameters:
-- tweet_id (str): The ID of the tweet to retweet (required).
-
-Example call:
-```json
-{{
-    "function": "retweet_tweet",
-    "params": {{
-        "tweet_id": "1234567890"
-    }}
-}}
-```
-
-6. comment_on_tweet(tweet_id: str, comment_text: str)
-
-Comments on a tweet using the provided tweet ID and comment text.
-Available parameters:
-- tweet_id (str): The ID of the tweet to comment on (required).
-- comment_text (str): The text of the comment (required).
-
-Example call:
-```json
-{{
-    "function": "comment_on_tweet",
-    "params": {{
-        "tweet_id": "1234567890",
-        "comment_text": "Comment text"
-    }}
-}}
-```
-
-7. get_trending_topics(count: int = 20)
-
-Returns trending topics using Polymarket's trending topics API.
+Fetch trending topics on Twitter.
 Available parameters:
 - count (int): Number of topics to return (optional; default: 5).
 
@@ -117,39 +65,7 @@ Example call:
 }}
 ```
 
-8. follow_user(user_id: str)
-
-Follows a user using the provided user ID.
-Available parameters:
-- user_id (str): The ID of the user to follow (required).
-
-Example call:
-```json
-{{
-    "function": "follow_user",
-    "params": {{
-        "user_id": "1234567890"
-    }}
-}}
-```
-
-9. unfollow_user(user_id: str)
-
-Unfollows a user using the provided user ID.
-Available parameters:
-- user_id (str): The ID of the user to unfollow (required).
-
-Example call:
-```json
-{{
-    "function": "unfollow_user",
-    "params": {{
-        "user_id": "1234567890"
-    }}
-}}
-```
-
-10. get_user_followers(user_id: str)
+5. get_user_followers(user_id: str) -> list[dict]
 
 Returns the list of followers of a user using the provided user ID of twitter.
 Available parameters:
@@ -165,20 +81,167 @@ Example call:
 }}
 ```
 
-11. generate_tweet_content(topic: str)
+6. like_tweets(tweets: list[dict]) -> dict[str, str]
 
-Generates a tweet content based on the provided topic.
+Likes all the tweets in the provided list.
 Available parameters:
-- topic (str): The topic to generate a tweet content for (required).
+- tweets (list[dict]): List of tweets to like (required).
 
 Example call:
 ```json
 {{
-    "function": "generate_tweet_content",
+    "function": "like_tweets",
     "params": {{
-        "topic": "Topic text"
+        "tweets": [
+            {{
+                "id": "1234567890",
+                "text": "Tweet text"
+            }},
+            {{
+                "id": "1234567891",
+                "text": "Tweet text"
+            }}
+        ]
     }}
 }}
+```
+
+7. comment_on_tweets(tweets: list[dict]) -> dict[str, str]
+
+Comments on all the tweets in the provided list.
+Available parameters:
+- tweets (list[dict]): List of tweets to comment on (required).
+
+Example call:
+```json
+{{
+    "function": "comment_on_tweets",
+    "params": {{
+        "tweets": [
+            {{
+                "id": "1234567890",
+                "text": "Tweet text"
+            }},
+            {{
+                "id": "1234567891",
+                "text": "Tweet text"
+            }}
+        ]
+    }}
+}}
+```
+
+8. retweet_tweets(tweets: list[dict]) -> dict[str, str]
+
+Retweets all the tweets in the provided list.
+Available parameters:
+- tweets (list[dict]): List of tweets to retweet (required).
+
+Example call:
+```json
+{{
+    "function": "retweet_tweets",
+    "params": {{
+        "tweets": [
+            {{
+                "id": "1234567890",
+                "text": "Tweet text"
+            }},
+            {{
+                "id": "1234567891",
+                "text": "Tweet text"
+            }}
+        ]
+    }}
+}}
+```
+
+9. follow_users(users: list[dict]) -> dict[str, str]
+
+Follows all the users in the provided list.
+Available parameters:
+- users (list[dict]): List of users to follow (required).
+
+Example call:
+```json
+{{
+    "function": "follow_users",
+    "params": {{
+        "users": [
+            {{
+                "id": "1234567890"
+            }},
+            {{
+                "id": "1234567891"
+            }}
+        ]
+    }}
+}}
+```
+
+10. unfollow_users(users: list[dict]) -> dict[str, str]
+
+Unfollows all the users in the provided list.
+Available parameters:
+- users (list[dict]): List of users to unfollow (required).
+
+Example call:
+```json
+{{
+    "function": "unfollow_users",
+    "params": {{
+        "users": [
+            {{
+                "id": "1234567890"
+            }},
+            {{
+                "id": "1234567891"
+            }}
+        ]
+    }}
+}}
+```
+
+11. generate_replies(tweets: list[dict]) -> dict[str, str]
+
+Generates replies to all the tweets in the provided list.
+Available parameters:
+- tweets (list[dict]): List of tweets to generate replies for (required).
+
+Example call:
+```json
+{{
+    "function": "generate_replies",
+    "params": {{
+        "tweets": [
+            {{
+                "id": "1234567890",
+                "text": "Tweet text"
+            }},
+            {{
+                "id": "1234567891",
+                "text": "Tweet text"
+            }}
+        ]
+    }}
+}}
+```
+
+12. create_tweet(tweet_text: str) -> dict[str, str]
+
+Creates a tweet post on twitter.
+Available parameters:
+- tweet_text (str): The text of the tweet (required).
+
+Example call:
+```json
+{{
+    "function": "create_tweet",
+    "params": {{
+        "tweet_text": "Tweet text"
+    }}
+}}
+```
 """
 
 TASK_CREATION_SYSTEM_PROMPT = """
@@ -266,6 +329,7 @@ You run in a ReAct loop. In the ReAct loop, you will perform the following steps
 6. If you don't get any parameter for a function, you will respond with a error json (exactly this): {{ "error":"NO_PARAMETERS_FOR_FUNCTION" }}.
 7. If all the functions execute successfully, you will respond with a json {{ "success":"TASK_EXECUTION_SUCCESS" }}.
 8. In between the ReAct loop, if you are not able to respond with required reponses or anything suspicious happens, you will respond with a error json (exactly this): {{ "error":"NO_RESPONSE" }}.
+9. Do not use functions other then from the available functions list.
 
 ---
 

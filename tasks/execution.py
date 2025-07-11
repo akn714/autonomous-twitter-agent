@@ -53,7 +53,7 @@ class TaskExecutionAgent:
     # todo: change to async
     def execution_loop(self, task):
         print("\n\n\n")
-        print("[Execution Loop START]".center(46, "="))
+        print("[ Execution Loop START ]".center(46, "="))
         print(f'[TASK] {task}\n')
         messages = [
             {"role": "system", "content": self.system_prompt.format(available_functions=self.available_functions)},
@@ -101,9 +101,7 @@ class TaskExecutionAgent:
             function = self.parser.extract_json_from_text(function)
             func_name = function.get('function')
             params = function.get('params', {})
-            if func_name == 'generate_reply':
-                return self.x.generate_reply(params['tweet_text'])
-            elif func_name == 'generate_tweet_content':
+            if func_name == 'generate_tweet_content':
                 return self.x.generate_tweet_content(params['topic'])
             elif func_name == 'get_user_tweets':
                 return self.x.get_user_tweets(params['username'])
@@ -119,12 +117,14 @@ class TaskExecutionAgent:
                 return self.x.comment_on_tweets(params['tweets'])
             elif func_name == 'retweet_tweets':
                 return self.x.retweet_tweets(params['tweets'])
+            elif func_name == 'follow_users':
+                return self.x.follow_users(params['users'])
+            elif func_name == 'unfollow_users':
+                return self.x.unfollow_users(params['users'])
+            elif func_name == 'generate_replies':
+                return self.x.generate_replies(params['tweets'])
             elif func_name == 'create_tweet':
                 return self.x.create_tweet(params['tweet_text'])
-            elif func_name == 'follow_user':
-                return self.x.follow_user(params['user_id'])
-            elif func_name == 'unfollow_user':
-                return self.x.unfollow_user(params['user_id'])
             else:
                 return { "error": f"Invalid function '{func_name}'" }
         except Exception as e:

@@ -2,6 +2,7 @@
 
 import os
 import json
+import time
 import asyncio
 from dotenv import load_dotenv
 
@@ -55,6 +56,9 @@ class Agent:
             # self.task_prioritization_agent.prioritize_tasks(self.tasks_queue, self.objective)
             self.task_execution_agent.execute_tasks(self.tasks_queue)
             self.tasks_queue.clear()
+
+            print('\n\n\n[+] Sleeping for 10 seconds...\n\n')
+            time.sleep(10)
 
 username = os.getenv("TWITTER_USERNAME")
 email = os.getenv("TWITTER_EMAIL")

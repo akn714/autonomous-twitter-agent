@@ -15,7 +15,7 @@ class Twitter:
         self.llm = llm
     
     # Utility functions
-    def generate_reply(self, tweet_text):
+    def generate_reply(self, tweet_text) -> dict:
         try:
             print('[generate_reply] tweet_text:', tweet_text)
             messages = [
@@ -40,8 +40,8 @@ class Twitter:
 
             return self.parser.extract_json_from_text(response)
         except Exception as e:
-            pritn(f"[!] Failed to generate reply: {e}")
-    def generate_tweet_content(self, topic):
+            print(f"[!] Failed to generate reply: {e}")
+    def generate_tweet_content(self, topic) -> dict:
         try:
             print('[generate_tweet_content] topic:', topic)
             messages = [
@@ -71,9 +71,9 @@ class Twitter:
             return { "error": f"Failed to generate tweet content: {e}" }
 
     # Data retrieval funtions
-    def get_user_tweets(self, username="unknown"):
+    def get_user_tweets(self, handle="unknown", count=5) -> list[dict]:
         try:
-            print('[get_user_tweets] username:', username)
+            print('[get_user_tweets] username:', handle)
             tweets = [
                 {
                     "id": 829342,
@@ -86,9 +86,9 @@ class Twitter:
             ]
             return tweets
         except Exception as e:
-            print(f"[!] Failed to fetch tweets for '{username}': {e}")
-            return { "error": f"Failed to fetch tweets for '{username}': {e}" }
-    def search_tweets_by_query(self, query):
+            print(f"[!] Failed to fetch tweets for '{handle}': {e}")
+            return { "error": f"Failed to fetch tweets for '{handle}': {e}" }
+    def search_tweets_by_query(self, query) -> list[dict]:
         try:
             print('[search_tweets_by_query] query:', query)
             tweets = [
@@ -105,7 +105,7 @@ class Twitter:
         except Exception as e:
             print(f"[!] Failed to search tweets with query '{query}': {e}")
             return { "error": f"Failed to search tweets with query '{query}': {e}" }
-    def get_trending_topics(self, count=10):
+    def get_trending_topics(self, count=10) -> dict[str, list[str]]:
         try:
             print('[get_trending_topics] count:', count)
             trends = {
@@ -115,7 +115,7 @@ class Twitter:
         except Exception as e:
             print(f"[!] Failed to get trending topics: {e}")
             return { "error": f"Failed to get trending topics: {e}" }
-    def get_user_followers(self, user_id): 
+    def get_user_followers(self, user_id) -> list[dict]:
         try:
             print('[get_user_followers] user_id:', user_id)
             followers = [
@@ -134,12 +134,12 @@ class Twitter:
             return { "error": f"Failed to get followers of user {user_id}: {e}" }
 
     # Functions to interact with multiple tweets
-    def like_tweets(self, tweets):
-        pritn('[like_tweets]')
+    def like_tweets(self, tweets) -> dict[str, str]:
+        print('[like_tweets]')
         for tweet in tweets:
-            self.like_tweet(tweet.id)
+            self.like_tweet(tweet['id'])
         return {"status": "success"}
-    def comment_on_tweets(self, tweets):
+    def comment_on_tweets(self, tweets) -> dict[str, str]:
         """
         tweets -> list[tweet]
         tweet -> {
@@ -149,58 +149,70 @@ class Twitter:
         """
         print('[comment_on_tweets]')
         for tweet in tweets:
-            self.comment_on_tweet(tweet.id, tweet.text)
+            self.comment_on_tweet(tweet['id'], tweet['text'])
         return {"status": "success"}
-    def retweet_tweets(self, tweets):
+    def retweet_tweets(self, tweets) -> dict[str, str]:
         print('[retweet_tweets]')
         for tweet in tweets:
-            self.retweet_tweet(tweet.id)
+            self.retweet_tweet(tweet['id'])
         return {"status": "success"}
-        
+    def follow_users(self, users) -> dict[str, str]:
+        print('[follow_users]')
+        for user in users:
+            self.follow_user(user['id'])
+        return {"status": "success"}
+    def unfollow_users(self, users) -> dict[str, str]:
+        print('[unfollow_users]')
+        for user in users:
+            self.unfollow_user(user['id'])
+        return {"status": "success"}
+    def generate_replies(self, tweets) -> dict[str, str]:
+        print('[generate_replies]')
+        for tweet in tweets:
+            reply_text = self.generate_reply(tweet['text'])
+            print(f"[generate_replies] replying {tweet['id']}: {reply_text}")
+        return {"status": "success"}
+
     # Functions to interact with single tweet
-    def create_tweet(self, tweet_text):
+    def create_tweet(self, tweet_text) -> dict[str, str]:
         try:
             tweet_content = self.generate_tweet_content(tweet_text)
             print(f"[create_tweet] tweet posted: {tweet_content}")
         except Exception as e:
             print(f"[!] Failed to create tweet: {e}")
             return { "error": f"Failed to create tweet: {e}" }
-    def like_tweet(self, tweet_id):
+    def like_tweet(self, tweet_id) -> dict[str, str]:
         try:
             print(f"[like_tweet] Liked tweet {tweet_id}")
         except Exception as e:
             print(f"[!] Failed to like tweet {tweet_id}: {e}")
             return { "error": f"Failed to like tweet {tweet_id}: {e}" }
-    def retweet_tweet(self, tweet_id):
+    def retweet_tweet(self, tweet_id) -> dict[str, str]:
         try:
             print(f"[retweet_tweet] Retweeted tweet {tweet_id}")
         except Exception as e:
             print(f"[!] Failed to retweet tweet {tweet_id}: {e}")
             return { "error": f"Failed to retweet tweet {tweet_id}: {e}" }
-    def comment_on_tweet(self, tweet_id, comment_text):
+    def comment_on_tweet(self, tweet_id, comment_text) -> dict[str, str]:
         try:
-            comment_text = self.generate_reply(tweet.text)
-            print(f'[comment_on_tweet] tweet.id:{tweet.id} reply: {comment_text.tweet_content}')
+            comment_text = self.generate_reply(comment_text)
+            print(f'[comment_on_tweet] tweet.id:{tweet_id} reply: {comment_text["tweet_content"]}')
         except Exception as e:
             print(f"[!] Failed to comment on tweet {tweet_id}: {e}")
             return { "error": f"Failed to comment on tweet {tweet_id}: {e}" }
 
     # User interactions
-    def follow_user(self, user_id):
+    def follow_user(self, user_id) -> dict[str, str]:
         try:
             print(f"[follow_user] Followed user {user_id}")
             return {"status": "success"}
         except Exception as e:
             print(f"[!] Failed to follow user {user_id}: {e}")
             return { "error": f"Failed to follow user {user_id}: {e}" }
-    def unfollow_user(self, user_id):
+    def unfollow_user(self, user_id) -> dict[str, str]:
         try:
             print(f"[unfollow_user] Unfollowed user {user_id}")
             return {"status": "success"}
         except Exception as e:
             print(f"[!] Failed to unfollow user {user_id}: {e}")
             return { "error": f"Failed to unfollow user {user_id}: {e}" }
-
-
-
-
