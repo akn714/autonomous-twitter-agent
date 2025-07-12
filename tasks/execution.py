@@ -19,6 +19,28 @@ class TaskExecutionAgent:
         self.parser = Parser()
         self.llm = llm
         self.x = Twitter()
+
+        self.functions = {
+            # Utility functions
+            'generate_tweet_content': self.x.generate_tweet_content,
+            
+            # Data retrieval functions
+            'get_user_tweets': self.x.get_user_tweets,
+            'search_tweets_by_query': self.x.search_tweets_by_query,
+            'get_trending_topics': self.x.get_trending_topics,
+            'get_user_followers': self.x.get_user_followers,
+            
+            # Fucntions to interact with multiple tweets
+            'like_tweets': self.x.like_tweets,
+            'comment_on_tweets': self.x.comment_on_tweets,
+            'retweet_tweets': self.x.retweet_tweets,
+            'follow_users': self.x.follow_users,
+            'unfollow_users': self.x.unfollow_users,
+            'generate_replies': self.x.generate_replies,
+
+            # Functions to interact with single tweet
+            'create_tweet': self.x.create_tweet
+        }
     
     async def x_login(self, USERNAME, EMAIL, PASSWORD):
         print('[twitter_login] LOGGING IN TO TWITTER')
@@ -32,23 +54,6 @@ class TaskExecutionAgent:
     def execute_tasks(self, tasks):
         for task in tasks:
             self.execution_loop(task)
-    
-    # def get_functions(self, task):
-    #     """
-    #     - Gets a task from the queue
-    #     - Generate a list of functions to be performed to accomplish the task using llm call
-    #     """
-    #     functions_list = []
-    #     messages = [
-    #         {"role": "system", "content": self.system_prompt},
-    #         {"role": "user", "content": self.user_prompt.format(task=task)}
-    #     ]
-        
-    #     response = self.llm.get_llm_response(messages)
-    #     functions_list = self.parser.extract_json_from_text(response)
-        
-    #     return functions_list
-
     
     # todo: change to async
     def execution_loop(self, task):
@@ -100,33 +105,11 @@ class TaskExecutionAgent:
         try:
             function = self.parser.extract_json_from_text(function)
             func_name = function.get('function')
+            f = self.functions.get(func_name)
             params = function.get('params', {})
-            if func_name == 'generate_tweet_content':
-                return self.x.generate_tweet_content(params['topic'])
-            elif func_name == 'get_user_tweets':
-                return self.x.get_user_tweets(params['username'])
-            elif func_name == 'search_tweets_by_query':
-                return self.x.search_tweets_by_query(params['query'])
-            elif func_name == 'get_trending_topics':
-                return self.x.get_trending_topics(params.get('count', 10))
-            elif func_name == 'get_user_followers':
-                return self.x.get_user_followers(params['user_id'])
-            elif func_name == 'like_tweets':
-                return self.x.like_tweets(params['tweets'])
-            elif func_name == 'comment_on_tweets':
-                return self.x.comment_on_tweets(params['tweets'])
-            elif func_name == 'retweet_tweets':
-                return self.x.retweet_tweets(params['tweets'])
-            elif func_name == 'follow_users':
-                return self.x.follow_users(params['users'])
-            elif func_name == 'unfollow_users':
-                return self.x.unfollow_users(params['users'])
-            elif func_name == 'generate_replies':
-                return self.x.generate_replies(params['tweets'])
-            elif func_name == 'create_tweet':
-                return self.x.create_tweet(params['tweet_text'])
-            else:
-                return { "error": f"Invalid function '{func_name}'" }
+            if f is None:
+                return { "error": f"Invalid function '{function}'" }
+            return f(**params)
         except Exception as e:
             return { "error": f"Execution failed: {str(e)}" }
 
