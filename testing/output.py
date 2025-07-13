@@ -1,3 +1,7 @@
+new_output = """
+================> [last_task_results] [{'task': {'task': 'Create a tweet based on your purpose', 'description': 'Use the generate_tweet_content function to generate a tweet based on your purpose.'}, 'result': 'Task executed successfully'}, {'task': {'task': 'Explore popular hashtags related to AI', 'description': 'Use the explore_hashtags_trends() function to identify trending hashtags related to AI and store them in a list.'}, 'result': 'Task executed successfully'}, {'task': {'task': 'Tweet the generated content about AI', 'description': 'Use the post_tweet() function to publish the tweet previously generated based on the purpose.'}, 'result': 'Task executed successfully'}]
+"""
+
 output = """
 [+] Initializing Main Agent
 [+] Initializing Task Creation Agent

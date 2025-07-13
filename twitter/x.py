@@ -41,6 +41,7 @@ class Twitter:
             return self.parser.extract_json_from_text(response)
         except Exception as e:
             print(f"[!] Failed to generate reply: {e}")
+            return { "error": f"Failed to generate reply: {e}" }
     def generate_tweet_content(self, topic) -> dict:
         try:
             print('[generate_tweet_content] topic:', topic)

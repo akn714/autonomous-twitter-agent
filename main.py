@@ -54,7 +54,10 @@ class Agent:
             print("[ TASK QUEUE END ]".center(46, "="))
             print("\n\n\n")
             # self.task_prioritization_agent.prioritize_tasks(self.tasks_queue, self.objective)
-            self.task_execution_agent.execute_tasks(self.tasks_queue)
+            task_results = self.task_execution_agent.execute_tasks(self.tasks_queue)
+            for result in task_results:
+                self.last_task_results.append(result)
+            print('================> [last_task_results]', self.last_task_results)
             self.tasks_queue.clear()
 
             print('\n\n\n[+] Sleeping for 10 seconds...\n\n')
